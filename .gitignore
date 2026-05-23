@@ -31,3 +31,6 @@ fastlane/test_output/
 
 # Logs
 *.log
+
+# Local screenshots from browser/App Store Connect troubleshooting
+desktop-capture*.png
