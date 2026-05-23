@@ -34,7 +34,6 @@ jobs:
             -project AquaPulseAI.xcodeproj \
             -scheme AquaPulseAI \
             -configuration Debug \
-            -sdk iphonesimulator \
             -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath build/DerivedData \
             -resultBundlePath build/AquaPulseAI.xcresult \
