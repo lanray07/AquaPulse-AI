@@ -3,7 +3,7 @@ import SwiftUI
 
 enum AppConstants {
     static let mockDataEnabled = true
-    static let appGroupIdentifier = "group.com.example.AquaPulseAI"
+    static let appGroupIdentifier = "group.com.obankole.AquaPulse"
     static let monthlyProductID = "aquapulseai.pro.monthly"
     static let yearlyProductID = "aquapulseai.pro.yearly"
     static let lifetimeProductID = "aquapulseai.pro.lifetime"

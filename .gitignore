@@ -6,18 +6,24 @@ build/
 *.xcodeproj/xcuserdata/
 *.xcodeproj/project.xcworkspace/xcuserdata/
 xcuserdata/
+*.moved-aside
 
 # Swift Package Manager
 .build/
+Packages/
 Package.resolved
 
 # macOS
 .DS_Store
 
-# Local secrets and app-store export artifacts
+# Fastlane and signing artifacts
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output/
 *.mobileprovision
-*.p12
 *.cer
+*.p12
 *.ipa
 *.dSYM.zip
 *.env
