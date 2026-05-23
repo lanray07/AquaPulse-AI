@@ -1,0 +1,113 @@
+name: App Store Upload
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  upload:
+    name: Archive and upload to App Store Connect
+    runs-on: macos-15
+    timeout-minutes: 45
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[upload-build]')
+
+    env:
+      APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+      APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+      APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Validate upload secrets
+        run: |
+          missing=0
+          for name in APP_STORE_CONNECT_KEY_ID APP_STORE_CONNECT_ISSUER_ID APP_STORE_CONNECT_PRIVATE_KEY APPLE_TEAM_ID; do
+            if [ -z "${!name}" ]; then
+              echo "::error::$name is required to sign and upload the App Store build"
+              missing=1
+            fi
+          done
+          exit "$missing"
+
+      - name: Write App Store Connect API key
+        run: |
+          mkdir -p "$RUNNER_TEMP/private_keys"
+          ASC_KEY_PATH="$RUNNER_TEMP/private_keys/AuthKey_${APP_STORE_CONNECT_KEY_ID}.p8"
+          printf '%s' "$APP_STORE_CONNECT_PRIVATE_KEY" > "$ASC_KEY_PATH"
+          chmod 600 "$ASC_KEY_PATH"
+          echo "ASC_KEY_PATH=$ASC_KEY_PATH" >> "$GITHUB_ENV"
+
+      - name: Create upload export options
+        run: |
+          mkdir -p build/AppStore
+          cat > build/AppStore/ExportOptions.plist <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>destination</key>
+              <string>upload</string>
+              <key>generateAppStoreInformation</key>
+              <true/>
+              <key>manageAppVersionAndBuildNumber</key>
+              <false/>
+              <key>method</key>
+              <string>app-store-connect</string>
+              <key>signingStyle</key>
+              <string>automatic</string>
+              <key>teamID</key>
+              <string>${APPLE_TEAM_ID}</string>
+              <key>uploadSymbols</key>
+              <true/>
+          </dict>
+          </plist>
+          EOF
+
+      - name: Archive release build
+        run: |
+          xcodebuild clean archive \
+            -project AquaPulseAI.xcodeproj \
+            -scheme AquaPulseAI \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath build/AppStore/AquaPulseAI.xcarchive \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$ASC_KEY_PATH" \
+            -authenticationKeyID "$APP_STORE_CONNECT_KEY_ID" \
+            -authenticationKeyIssuerID "$APP_STORE_CONNECT_ISSUER_ID" \
+            -skipPackagePluginValidation \
+            DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
+            CODE_SIGN_STYLE=Automatic \
+            CURRENT_PROJECT_VERSION="${GITHUB_RUN_NUMBER}" \
+            COMPILER_INDEX_STORE_ENABLE=NO
+
+      - name: Upload archive to App Store Connect
+        run: |
+          xcodebuild -exportArchive \
+            -archivePath build/AppStore/AquaPulseAI.xcarchive \
+            -exportOptionsPlist build/AppStore/ExportOptions.plist \
+            -exportPath build/AppStore/export \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$ASC_KEY_PATH" \
+            -authenticationKeyID "$APP_STORE_CONNECT_KEY_ID" \
+            -authenticationKeyIssuerID "$APP_STORE_CONNECT_ISSUER_ID"
+
+      - name: Upload distribution logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: AppStore-upload-logs
+          path: |
+            build/AppStore/export
+            build/AppStore/ExportOptions.plist
+          if-no-files-found: ignore
