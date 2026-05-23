@@ -69,8 +69,8 @@ struct SettingsView: View {
             }
 
             Section("Legal") {
-                Link("Privacy Policy", destination: URL(string: "https://example.com/privacy")!)
-                Link("Terms of Use", destination: URL(string: "https://example.com/terms")!)
+                Link("Privacy Policy", destination: URL(string: "https://github.com/lanray07/AquaPulse-AI/blob/main/PRIVACY.md")!)
+                Link("Terms of Use", destination: URL(string: "https://github.com/lanray07/AquaPulse-AI/blob/main/TERMS.md")!)
             }
 
             Section {
