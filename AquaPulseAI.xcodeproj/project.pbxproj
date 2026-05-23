@@ -183,7 +183,7 @@
             name = "AquaPulseAIWatch Watch App";
             productName = "AquaPulseAIWatch Watch App";
             productReference = C20000000000000000000001 /* AquaPulseAIWatch Watch App.app */;
-            productType = "com.apple.product-type.application.watchapp2";
+            productType = "com.apple.product-type.application";
         };
         E30000000000000000000001 /* AquaPulseAIWidget */ = {
             isa = PBXNativeTarget;
