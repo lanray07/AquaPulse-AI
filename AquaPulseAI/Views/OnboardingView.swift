@@ -53,11 +53,11 @@ struct OnboardingView: View {
                         .foregroundStyle(.secondary)
                 }
 
-                Section("Privacy and Apple Health") {
-                    Text("AquaPulse AI stores hydration data locally with SwiftData. Apple Health is optional and only requested if you choose to connect it.")
+                Section("Privacy and Apple Health (HealthKit)") {
+                    Text("AquaPulse AI stores hydration data locally with SwiftData. Apple Health uses HealthKit only for optional water intake read and write sync, and only after you grant permission.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
-                    Button("Connect Apple Health Placeholder") {
+                    Button("Connect Apple Health") {
                         Task { await healthKitService.requestAuthorization() }
                     }
                     Text(healthKitService.statusMessage)

@@ -36,7 +36,15 @@ struct SettingsView: View {
                     RemindersView(profile: profile)
                 }
 
-                Button("Apple Health Permission") {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Apple Health (HealthKit)")
+                        .font(.headline)
+                    Text("Optional HealthKit access reads and writes water intake only. AquaPulse AI does not use CareKit.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Button("Connect Apple Health") {
                     Task { await healthKitService.requestAuthorization() }
                 }
                 Text(healthKitService.statusMessage)
@@ -60,7 +68,7 @@ struct SettingsView: View {
                     Text(subscriptionManager.currentState.plan.rawValue)
                         .foregroundStyle(.secondary)
                 }
-                Button("Manage Subscription") {
+                Button("AquaPulse AI Pro and In-App Purchases") {
                     showingPaywall = true
                 }
                 Button("Restore Purchases") {
@@ -69,8 +77,8 @@ struct SettingsView: View {
             }
 
             Section("Legal") {
-                Link("Privacy Policy", destination: URL(string: "https://github.com/lanray07/AquaPulse-AI/blob/main/PRIVACY.md")!)
-                Link("Terms of Use", destination: URL(string: "https://github.com/lanray07/AquaPulse-AI/blob/main/TERMS.md")!)
+                Link("Privacy Policy", destination: URL(string: AppConstants.privacyPolicyURL)!)
+                Link("Terms of Use (EULA)", destination: URL(string: AppConstants.termsOfUseURL)!)
             }
 
             Section {

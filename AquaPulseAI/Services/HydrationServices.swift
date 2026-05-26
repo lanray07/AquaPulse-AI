@@ -117,7 +117,7 @@ final class ReminderService: ObservableObject {
 final class HealthKitService: ObservableObject {
     @Published var isAvailable = HKHealthStore.isHealthDataAvailable()
     @Published var isAuthorized = false
-    @Published var statusMessage = "Not connected"
+    @Published var statusMessage = "Apple Health (HealthKit) water intake sync is not connected."
 
     private let healthStore = HKHealthStore()
 
@@ -141,7 +141,7 @@ final class HealthKitService: ObservableObject {
                 }
             }
             isAuthorized = true
-            statusMessage = "Connected placeholder"
+            statusMessage = "Apple Health (HealthKit) is connected for water intake read and write access."
         } catch {
             isAuthorized = false
             statusMessage = error.localizedDescription
@@ -222,8 +222,9 @@ final class SubscriptionManager: ObservableObject {
 
         do {
             products = try await Product.products(for: productIDs)
+            errorMessage = nil
         } catch {
-            errorMessage = "StoreKit products are placeholders until product IDs exist in App Store Connect."
+            errorMessage = "StoreKit products are unavailable. Check the App Store sandbox connection and product configuration."
         }
     }
 
@@ -233,7 +234,7 @@ final class SubscriptionManager: ObservableObject {
             return
         }
 
-        if AppConstants.mockDataEnabled {
+        if AppConstants.mockPurchasesEnabled {
             currentState = SubscriptionState(plan: plan, isActive: true, renewsAt: plan == .lifetime ? nil : Calendar.current.date(byAdding: .month, value: 1, to: .now))
             return
         }

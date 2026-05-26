@@ -12,7 +12,9 @@ Hydration goals are estimates. Always use your own judgment and consult a qualif
 
 ## Subscriptions
 
-AquaPulse AI may offer optional paid subscriptions or purchases through Apple's App Store. Purchases, renewals, cancellations, and refunds are handled by Apple according to your App Store account settings and Apple's terms.
+AquaPulse AI may offer optional paid subscriptions or purchases through Apple's App Store.
+
+Auto-renewable subscriptions renew automatically unless cancelled at least 24 hours before the end of the current period. Payment is charged to your Apple ID account after purchase confirmation. You can manage or cancel subscriptions in your App Store account settings. Purchases, renewals, cancellations, and refunds are handled by Apple according to your App Store account settings and Apple's terms.
 
 ## Acceptable Use
 

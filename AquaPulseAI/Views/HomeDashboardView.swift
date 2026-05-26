@@ -50,6 +50,8 @@ struct HomeDashboardView: View {
                 }
                 .frame(maxWidth: .infinity)
 
+                HealthKitDisclosureCard()
+
                 UpgradeBanner {
                     showingPaywall = true
                 }

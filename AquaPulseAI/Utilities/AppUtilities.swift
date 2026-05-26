@@ -3,10 +3,17 @@ import SwiftUI
 
 enum AppConstants {
     static let mockDataEnabled = true
+    #if DEBUG
+    static let mockPurchasesEnabled = true
+    #else
+    static let mockPurchasesEnabled = false
+    #endif
     static let appGroupIdentifier = "group.com.obankole.AquaPulse"
     static let monthlyProductID = "aquapulseai.pro.monthly"
     static let yearlyProductID = "aquapulseai.pro.yearly"
     static let lifetimeProductID = "aquapulseai.pro.lifetime"
+    static let privacyPolicyURL = "https://github.com/lanray07/AquaPulse-AI/blob/main/PRIVACY.md"
+    static let termsOfUseURL = "https://github.com/lanray07/AquaPulse-AI/blob/main/TERMS.md"
 }
 
 enum AppTheme {

@@ -190,13 +190,15 @@ struct UpgradeBanner: View {
                 Image(systemName: "sparkles")
                     .font(.title3)
                 VStack(alignment: .leading, spacing: 3) {
-                    Text("Unlock smart hydration")
+                    Text("AquaPulse AI Pro")
                         .font(.headline)
-                    Text("Advanced insights, widgets, and watch extras")
+                    Text("View subscriptions and lifetime purchase")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
+                Text("View")
+                    .font(.caption.bold())
                 Image(systemName: "chevron.right")
                     .font(.caption.bold())
             }
@@ -204,5 +206,30 @@ struct UpgradeBanner: View {
             .background(AppTheme.blue.opacity(0.12), in: RoundedRectangle(cornerRadius: 8))
         }
         .buttonStyle(.plain)
+    }
+}
+
+struct HealthKitDisclosureCard: View {
+    var body: some View {
+        HStack(spacing: 14) {
+            Image(systemName: "heart.text.square.fill")
+                .font(.title2)
+                .foregroundStyle(AppTheme.teal)
+                .frame(width: 42, height: 42)
+                .background(AppTheme.teal.opacity(0.12), in: RoundedRectangle(cornerRadius: 8))
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Apple Health (HealthKit)")
+                    .font(.headline)
+                Text("Optional water intake read and write sync. Manage it in Settings.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+
+            Spacer()
+        }
+        .padding()
+        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 8))
+        .accessibilityElement(children: .combine)
     }
 }
