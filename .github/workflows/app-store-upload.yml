@@ -73,6 +73,17 @@ jobs:
           </plist>
           EOF
 
+      - name: Verify HealthKit entitlement source
+        run: |
+          /usr/libexec/PlistBuddy -c "Print :com.apple.developer.healthkit" AquaPulseAI/AquaPulseAI.entitlements | grep -q "true"
+          xcodebuild -project AquaPulseAI.xcodeproj \
+            -scheme AquaPulseAI \
+            -configuration Release \
+            -showBuildSettings \
+            CODE_SIGNING_ALLOWED=NO \
+            | tee build/AppStore/build-settings.txt
+          grep -q "CODE_SIGN_ENTITLEMENTS = AquaPulseAI/AquaPulseAI.entitlements" build/AppStore/build-settings.txt
+
       - name: Archive release build
         run: |
           xcodebuild clean archive \
@@ -88,6 +99,9 @@ jobs:
             -skipPackagePluginValidation \
             DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
             CODE_SIGN_STYLE=Automatic \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
             CURRENT_PROJECT_VERSION="${GITHUB_RUN_NUMBER}" \
             COMPILER_INDEX_STORE_ENABLE=NO
 
@@ -110,4 +124,5 @@ jobs:
           path: |
             build/AppStore/export
             build/AppStore/ExportOptions.plist
+            build/AppStore/build-settings.txt
           if-no-files-found: ignore
