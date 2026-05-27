@@ -122,9 +122,10 @@ final class HealthKitService: ObservableObject {
     private let healthStore = HKHealthStore()
 
     func requestAuthorization() async {
+        isAvailable = HKHealthStore.isHealthDataAvailable()
         guard HKHealthStore.isHealthDataAvailable(),
               let waterType = HKObjectType.quantityType(forIdentifier: .dietaryWater) else {
-            statusMessage = "Health data is not available on this device."
+            statusMessage = "Apple Health water intake sync is not available on this device. Local hydration tracking still works normally."
             return
         }
 
@@ -144,8 +145,23 @@ final class HealthKitService: ObservableObject {
             statusMessage = "Apple Health (HealthKit) is connected for water intake read and write access."
         } catch {
             isAuthorized = false
-            statusMessage = error.localizedDescription
+            statusMessage = Self.friendlyAuthorizationMessage(for: error)
         }
+    }
+
+    private static func friendlyAuthorizationMessage(for error: Error) -> String {
+        let description = error.localizedDescription
+        let lowercasedDescription = description.lowercased()
+
+        if lowercasedDescription.contains("entitlement") {
+            return "Apple Health water intake sync is unavailable in this build. You can continue tracking hydration locally."
+        }
+
+        if lowercasedDescription.contains("cancel") || lowercasedDescription.contains("denied") {
+            return "Apple Health permission was not granted. You can keep tracking locally or enable access later in Settings."
+        }
+
+        return "Apple Health could not be connected right now. Local hydration tracking still works normally."
     }
 }
 

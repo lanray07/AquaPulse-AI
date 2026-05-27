@@ -47,6 +47,7 @@ struct SettingsView: View {
                 Button("Connect Apple Health") {
                     Task { await healthKitService.requestAuthorization() }
                 }
+                .disabled(!healthKitService.isAvailable)
                 Text(healthKitService.statusMessage)
                     .font(.caption)
                     .foregroundStyle(.secondary)

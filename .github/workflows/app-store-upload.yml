@@ -88,9 +88,6 @@ jobs:
             -skipPackagePluginValidation \
             DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
             CODE_SIGN_STYLE=Automatic \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGN_IDENTITY="" \
             CURRENT_PROJECT_VERSION="${GITHUB_RUN_NUMBER}" \
             COMPILER_INDEX_STORE_ENABLE=NO
 
